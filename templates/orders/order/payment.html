@@ -1,0 +1,25 @@
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<button id="rzp-button">Pay Now</button>
+
+<script>
+var options = {
+    "key": "{{ razorpay_key }}",
+    "amount": "{{ amount }}",
+    "currency": "INR",
+    "name": "My Shop",
+    "description": "Order Payment",
+    "order_id": "{{ razorpay_order_id }}",
+
+    "handler": function (response) {
+        window.location.href = "{% url 'orders:success' %}";
+    }
+};
+
+var rzp = new Razorpay(options);
+
+document.getElementById("rzp-button").onclick = function(e){
+    rzp.open();
+    e.preventDefault();
+}
+</script>

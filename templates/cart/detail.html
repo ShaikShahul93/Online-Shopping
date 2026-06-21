@@ -1,0 +1,87 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+Your Shopping Cart
+{% endblock %}
+
+{% block content %}
+<h1>Your Shopping Cart</h1>
+
+<table class="cart">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Remove</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for item in cart %}
+        {% with product=item.product %}
+        <tr>
+
+            <!-- IMAGE -->
+            <td>
+                <a href="{{ product.get_absolute_url }}">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" width="100">
+                    {% else %}
+                        <img src="{% static 'img/no_image.png' %}" width="100">
+                    {% endif %}
+                </a>
+            </td>
+
+            <!-- NAME -->
+            <td>{{ product.name }}</td>
+
+            <!-- UPDATE FORM -->
+            <td>
+                <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                    {% csrf_token %}
+                    {{ item.update_quantity_form.quantity }}
+                    {{ item.update_quantity_form.override }}
+                    <input type="submit" value="Update">
+                </form>
+            </td>
+
+            <!-- REMOVE -->
+            <td>
+                <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Remove">
+                </form>
+            </td>
+
+            <!-- PRICES -->
+            <td>${{ item.price }}</td>
+            <td>${{ item.total_price }}</td>
+
+        </tr>
+        {% endwith %}
+    {% endfor %}
+
+    <tr class="total">
+        <td>Total</td>
+        <td colspan="4"></td>
+        <td>${{ cart.get_total_price }}</td>
+    </tr>
+
+    </tbody>
+</table>
+
+<p class="text-right">
+    <a href="{% url 'shop:product_list' %}" class="button light">
+        Continue Shopping
+    </a>
+
+    <a href="{% url 'orders:order_create' %}" class="button">
+        Checkout
+    </a>
+</p>
+
+{% endblock %}

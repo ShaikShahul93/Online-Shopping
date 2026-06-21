@@ -1,0 +1,224 @@
+```html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Shop{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body{
+            background:#f4f6f9;
+            color:#333;
+            min-height:100vh;
+        }
+
+        /* Header */
+        #header{
+            background:linear-gradient(135deg,#1e3c72,#2a5298);
+            padding:20px 50px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            box-shadow:0 4px 15px rgba(0,0,0,0.15);
+            position:sticky;
+            top:0;
+            z-index:1000;
+        }
+
+        .logo{
+            color:#fff;
+            text-decoration:none;
+            font-size:32px;
+            font-weight:700;
+            letter-spacing:1px;
+            transition:0.3s;
+        }
+
+        .logo:hover{
+            color:#ffd700;
+        }
+
+        .cart{
+            background:rgba(255,255,255,0.15);
+            padding:12px 20px;
+            border-radius:30px;
+            backdrop-filter:blur(10px);
+            color:#fff;
+            font-size:16px;
+        }
+
+        .cart a{
+            color:#ffd700;
+            text-decoration:none;
+            font-weight:600;
+            margin-left:5px;
+        }
+
+        .cart a:hover{
+            text-decoration:underline;
+        }
+
+        /* Content Area */
+        #content{
+            width:95%;
+            max-width:1400px;
+            margin:40px auto;
+            background:#fff;
+            padding:40px;
+            border-radius:20px;
+            box-shadow:0 8px 25px rgba(0,0,0,0.08);
+            animation:fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn{
+            from{
+                opacity:0;
+                transform:translateY(20px);
+            }
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+        /* Buttons */
+        button,
+        input[type="submit"],
+        .button{
+            background:#2a5298;
+            color:#fff;
+            border:none;
+            padding:12px 25px;
+            border-radius:8px;
+            cursor:pointer;
+            transition:0.3s;
+            font-size:16px;
+        }
+
+        button:hover,
+        input[type="submit"]:hover,
+        .button:hover{
+            background:#1e3c72;
+            transform:translateY(-2px);
+        }
+
+        /* Forms */
+        input,
+        select,
+        textarea{
+            width:100%;
+            padding:12px;
+            border:1px solid #ddd;
+            border-radius:8px;
+            margin-top:8px;
+            margin-bottom:20px;
+            outline:none;
+            transition:0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus{
+            border-color:#2a5298;
+            box-shadow:0 0 8px rgba(42,82,152,0.2);
+        }
+
+        /* Tables */
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        table th,
+        table td{
+            padding:15px;
+            border-bottom:1px solid #ddd;
+            text-align:left;
+        }
+
+        table th{
+            background:#2a5298;
+            color:white;
+        }
+
+        /* Responsive */
+        @media (max-width:768px){
+
+            #header{
+                flex-direction:column;
+                gap:15px;
+                text-align:center;
+                padding:20px;
+            }
+
+            .logo{
+                font-size:28px;
+            }
+
+            .cart{
+                width:100%;
+            }
+
+            #content{
+                padding:25px;
+                margin:20px auto;
+            }
+        }
+
+        @media (max-width:480px){
+
+            .logo{
+                font-size:24px;
+            }
+
+            .cart{
+                font-size:14px;
+            }
+
+            #content{
+                padding:20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="header">
+        <a href="/" class="logo">🛒 My Shop</a>
+
+        <div class="cart">
+            {% with total_items=cart|length %}
+                {% if total_items > 0 %}
+                    Your Cart:
+                    <a href="{% url 'cart:cart_detail' %}">
+                        {{ total_items }} item{{ total_items|pluralize }}
+                        | ${{ cart.get_total_price }}
+                    </a>
+                {% elif not order %}
+                    Your cart is empty.
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>
+```
